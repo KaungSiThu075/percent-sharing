@@ -57,23 +57,44 @@ const App: React.FC = () => {
     setIsEdit(true);
     setEditMemberId(id);
     const memberToEdit = members.find((m) => m.id === id);
+
     if (memberToEdit) {
       setNewInput(memberToEdit.percent);
+    } else {
+      alert("error");
     }
   };
+
+  // const possibleUpdate = members.map((m) => {
+  //   if (m.id === editMemberId && memberAddAll <= 100) {
+  //     return { ...m, percent: newInput };
+  //   }
+  //   return m;
+  // });
+  // console.log(possibleUpdate);
+
+  // if (memberAddAll <= 100) {
+  //   setMembers(possibleUpdate);
+  // }
 
   const updatePercent = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setIsEdit(false);
-    setMembers(
-      members.map((m) => {
-        if (m.id === editMemberId) {
-          return { ...m, percent: newInput };
-        }
-        return m;
-      })
-    );
+
+    const updateMember = members.map((m) => {
+      if (m.id === editMemberId) {
+        const newPercent =
+          newInput - m.percent < adminPercent
+            ? newInput
+            : adminPercent + m.percent;
+        return { ...m, percent: newPercent };
+      }
+      return m;
+    });
+
+    setMembers(updateMember);
+
     setEditMemberId(null);
   };
 
